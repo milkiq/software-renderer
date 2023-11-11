@@ -1,44 +1,29 @@
+#include <cstdio>
 #include <graphics.h>
-#include <time.h>
-#include <conio.h>
+#include <wmath/wmath.h>
 
 int main()
 {
-	// 设置随机种子
-	srand((unsigned) time(NULL));
-
-	// 初始化图形模式
 	initgraph(640, 480);
-
-	int  x, y;
-	char c;
 
 	setfont(16, 8, "Courier");	// 设置字体
 
-	// 设置颜色
+	setcolor(GREEN);
 
-	for (int i = 0; i <= 479; i++)
-	{
-		setcolor(GREEN);
-		// 在随机位置显示三个随机字母
-		for (int j = 0; j < 3; j++)
-		{
-			x = (rand() % 80) * 8;
-			y = (rand() % 20) * 24;
-			c = (rand() % 26) + 65;
-			outtextxy(x, y, c);
-		}
+	wmath::Vector3d a(1, 2, 3);
+	wmath::Vector3d b(4, 5, 6);
+	double adotb = wmath::Vector3d::dot(a, b);
+	double c = wmath::sqrt(2);
 
-		setcolor(BLACK);
-		// 画线擦掉一个像素行
-		line(0, i, 639, i);
+	char buffer[256];
+	snprintf(buffer, sizeof(buffer), "%f", c);
+	outtextxy(320, 240, buffer);
+	snprintf(buffer, sizeof(buffer), "%f", adotb);
+	outtextxy(320, 260, buffer);
 
-		Sleep(10);					// 延时
-		if (i >= 479)	i = -1;
-		if (kbhit())	break;		// 按任意键退出
-	}
+	getch();
 
-	// 关闭图形模式
 	closegraph();
+
 	return 0;
 }
