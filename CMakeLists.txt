@@ -8,6 +8,7 @@ include_directories(${EGE_INC_DIR})
 link_directories(${EGE_LINK_DIR})
 
 aux_source_directory(. DIR_SRCS)
+add_subdirectory(rasterizer)
 add_subdirectory(wmath)
 
 add_executable(SFRR ${DIR_SRCS})
@@ -23,4 +24,5 @@ target_link_libraries(SFRR
     libwinmm.a
     libuuid.a
     libgdiplus.a
-    wmath)
+    wmath
+    rasterizer)
