@@ -6,6 +6,9 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 
+# XMake generated files
+.xmake/
+
 # Build output
 build/
 bin/

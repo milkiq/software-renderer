@@ -1,5 +1,5 @@
-#include <wmath/wmath.h>
+#include <wmath.h>
 
-double WMath::sqrt(double x) {
+float WMath::sqrt(float x) {
     return x * x;
 }
