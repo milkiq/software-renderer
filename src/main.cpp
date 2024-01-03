@@ -7,7 +7,9 @@
 using namespace WMath;
 using namespace Rasterizer;
 
-void drawScene(int width, int height, Core::Camera3D camera) {}
+void drawScene(int width, int height, Node::Camera3D camera) {
+
+}
 
 int main()
 {
@@ -16,6 +18,10 @@ int main()
 	Vector2i a(300, 300);
 	Vector2i b(400, 400);
 	Vector2i c(500, 200);
+
+	a += b;
+
+	a = Vector3i(300, 300, 0);
 
 	Rasterizer2D::DrawTriangle(a, b, c, WRGB(255, 0, 0));
 

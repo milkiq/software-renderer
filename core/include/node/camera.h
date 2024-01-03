@@ -3,7 +3,7 @@
 
 #include <wmath.h>
 
-namespace Core {
+namespace Node {
     class Camera3D {
         public:
             WMath::Vector3f position;
@@ -15,7 +15,7 @@ namespace Core {
             float width;
             float height;
 
-            Camera3D(WMath::Vector3f position, WMath::Vector3f rotation, float fov, float nearDistance, float farDistance, float aspectRatio, float width, float height);
+            Camera3D(WMath::Vector3f& position, WMath::Vector3f& rotation, float fov, float nearDistance, float farDistance, float aspectRatio, float width, float height);
     };
 }
 

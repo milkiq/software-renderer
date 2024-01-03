@@ -38,16 +38,16 @@ namespace WMath {
         static_assert(N != 0, "N can't be zero");
         static_assert(N <= 4, "N can't over 4");
 
-        Vec<T, N> do_add(const Vec<T, N>& other) const {
-            Vec<T, N> result;
+        Vec<T, N, D> do_add(const Vec<T, N, D>& other) const {
+            Vec<T, N, D> result;
             for (size_t i = 0; i < N; i++) {
                 result[i] = data[i] + other[i];
             }
             return result;
         }
 
-        Vec<T, N> do_sub(const Vec<T, N>& other) const {
-            Vec<T, N> result;
+        Vec<T, N, D> do_sub(const Vec<T, N, D>& other) const {
+            Vec<T, N, D> result;
             for (size_t i = 0; i < N; i++) {
                 result[i] = data[i] - other[i];
             }
@@ -63,39 +63,46 @@ namespace WMath {
             }
         }
 
-        Vec(const Vec<T, N>& other) {
+        Vec(const Vec<T, N, D>& other) {
             for (size_t i = 0; i < N; i++) {
                 data[i] = other[i];
             }
         }
 
+        T operator[](size_t index) const {
+            return data[index];
+        }
 
-        Vec<T, N> operator+(const Vec<T, N>& other) const {
+        T& operator[](size_t index) {
+            return data[index];
+        }
+
+        Vec<T, N, D> operator+(const Vec<T, N, D>& other) const {
             return do_add(other);
         }
 
-        Vec<T, N>& operator+=(const Vec<T, N>& other) {
-            Vec<T, N> result = do_add(other);
+        Vec<T, N, D>& operator+=(const Vec<T, N, D>& other) {
+            Vec<T, N, D> result = do_add(other);
             for (size_t i = 0; i < N; i++) {
                 data[i] = result[i];
             }
             return *this;
         }
 
-        Vec<T, N> operator-(const Vec<T, N>& other) const {
+        Vec<T, N, D> operator-(const Vec<T, N, D>& other) const {
             return do_sub(other);
         }
 
-        Vec<T, N>& operator-=(const Vec<T, N>& other) {
-            Vec<T, N> result = do_sub(other);
+        Vec<T, N, D>& operator-=(const Vec<T, N, D>& other) {
+            Vec<T, N, D> result = do_sub(other);
             for (size_t i = 0; i < N; i++) {
                 data[i] = result[i];
             }
             return *this;
         }
 
-        template<typename U, size_t M>
-        Vec<T, N>& operator=(const Vec<U, M>& other) {
+        template<typename U, size_t M, typename C>
+        Vec<T, N, D>& operator=(const Vec<U, M, C>& other) {
             static_assert(M >= N, "M must be greater than or equal to N");
 
             for (size_t i = 0; i < N; i++) {
@@ -105,7 +112,11 @@ namespace WMath {
             return *this;
         }
 
-        bool operator==(const Vec<T, N>& other) const {
+        void operator=(int a) {
+            printf("a");
+        }
+
+        bool operator==(const Vec<T, N, D>& other) const {
             for (size_t i = 0; i < N; i++) {
                 if (data[i] != other[i]) {
                     return false;
@@ -114,7 +125,7 @@ namespace WMath {
             return true;
         }
 
-        T Dot(const Vec<T, N>& other) const {
+        T Dot(const Vec<T, N, D>& other) const {
             T result = 0;
             for (size_t i = 0; i < N; i++) {
                 result += data[i] * other[i];
@@ -122,21 +133,21 @@ namespace WMath {
             return result;
         }
 
-        Vec<T, N> Normalized() const {
+        Vec<T, N, D> Normalized() const {
             T length = 0;
             for (size_t i = 0; i < N; i++) {
                 length += data[i] * data[i];
             }
             length = sqrt(length);
-            Vec<T, N> result;
+            Vec<T, N, D> result;
             for (size_t i = 0; i < N; i++) {
                 result[i] = data[i] / length;
             }
             return result;
         }
 
-        Vec<T, N> Cross(const Vec<T, N>& other) const {
-            Vec<T, N> result;
+        Vec<T, N, D> Cross(const Vec<T, N, D>& other) const {
+            Vec<T, N, D> result;
             for (size_t i = 0; i < N; i++) {
                 result[i] = data[(i + 1) % N] * other[(i + 2) % N] - data[(i + 2) % N] * other[(i + 1) % N];
             }
@@ -151,7 +162,14 @@ namespace WMath {
             using D::x;
             using D::y;
             using D::z;
-            Vector3();
+            using Vec<T, 3, VecData3<T>>::Vec;
+            using Vec<T, 3, VecData3<T>>::operator+;
+            using Vec<T, 3, VecData3<T>>::operator-;
+            using Vec<T, 3, VecData3<T>>::operator=;
+            using Vec<T, 3, VecData3<T>>::operator+=;
+            using Vec<T, 3, VecData3<T>>::operator-=;
+            using Vec<T, 3, VecData3<T>>::operator==;
+            // Vector3();
             Vector3(T _x, T _y, T _z);
     };
 
@@ -161,7 +179,13 @@ namespace WMath {
             using D = VecData2<T>;
             using D::x;
             using D::y;
-            Vector2();
+            using Vec<T, 2, VecData2<T>>::Vec;
+            using Vec<T, 2, VecData2<T>>::operator+;
+            using Vec<T, 2, VecData2<T>>::operator-;
+            using Vec<T, 2, VecData2<T>>::operator=;
+            using Vec<T, 2, VecData2<T>>::operator+=;
+            using Vec<T, 2, VecData2<T>>::operator-=;
+            using Vec<T, 2, VecData2<T>>::operator==;
             Vector2(T _x, T _y);
     };
 
@@ -178,11 +202,11 @@ namespace WMath {
         y = _y;
     }
 
-    typedef typename WMath::Vector3<int> Vector3i;
-    typedef typename WMath::Vector3<float> Vector3f;
+    using Vector3i = WMath::Vector3<int>;
+    using Vector3f = WMath::Vector3<float>;
 
-    typedef typename WMath::Vector2<int> Vector2i;
-    typedef typename WMath::Vector2<float> Vector2f;
+    using Vector2i = WMath::Vector2<int>;
+    using Vector2f = WMath::Vector2<float>;
 }
 
 #endif
