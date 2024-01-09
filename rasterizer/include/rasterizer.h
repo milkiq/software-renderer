@@ -9,7 +9,7 @@ using namespace WMath;
 namespace Rasterizer {
     class Rasterizer2D {
         public:
-            static void DrawTriangle(const Vector2i& a, const Vector2i& b, const Vector2i& c, color_t color);
+            static void DrawTriangle(const Vector2f& a, const Vector2f& b, const Vector2f& c, color_t color);
     };
 }
 

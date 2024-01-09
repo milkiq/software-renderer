@@ -3,11 +3,11 @@
 using namespace Rasterizer;
 using namespace WMath;
 
-void Rasterizer2D::DrawTriangle(const Vector2i& a, const Vector2i& b, const Vector2i& c, color_t color) {
-	int top = a.y;
-	int bottom = a.y;
-	int left = a.x;
-	int right = a.x;
+void Rasterizer2D::DrawTriangle(const Vector2f& a, const Vector2f& b, const Vector2f& c, color_t color) {
+	float top = a.y;
+	float bottom = a.y;
+	float left = a.x;
+	float right = a.x;
 
 	// calculate the bounding box of the triangle
 	if (b.y > top) {
@@ -38,6 +38,11 @@ void Rasterizer2D::DrawTriangle(const Vector2i& a, const Vector2i& b, const Vect
 		right = c.x;
 	}
 
+	left = floor(left);
+	right = ceil(right);
+	bottom = floor(bottom);
+	top = ceil(top);
+
 	// use cross product to judge whether a pixel is in the triangle
 	// the right hand rule of cross product can judge whether a point is on the left or right of a line
 	// if all three points are on the same side of the line, the result of cross product is all positive or negative
@@ -57,9 +62,9 @@ void Rasterizer2D::DrawTriangle(const Vector2i& a, const Vector2i& b, const Vect
 			Vector2f v4 = p - b;
 			Vector2f v5 = p - c;
 
-			double cross0 = Vector2f::Cross(v3, v0);
-			double cross1 = Vector2f::Cross(v4, v1);
-			double cross2 = Vector2f::Cross(v5, v2);
+			float cross0 = Vector2f::Cross(v3, v0);
+			float cross1 = Vector2f::Cross(v4, v1);
+			float cross2 = Vector2f::Cross(v5, v2);
 
 			if (cross0 >= 0 && cross1 >= 0 && cross2 >= 0) {
 				putpixel(x, y, color);
@@ -70,20 +75,20 @@ void Rasterizer2D::DrawTriangle(const Vector2i& a, const Vector2i& b, const Vect
 	**/
 
 	// optimized code
-	double l0 = b.y - a.y;
-	double l1 = c.y - b.y;
-	double l2 = a.y - c.y;
-	double b0 = a.x - b.x;
-	double b1 = b.x - c.x;
-	double b2 = c.x - a.x;
-	double crossY0 = left * l0 + bottom * b0 + b.x * a.y - a.x * b.y;
-	double crossY1 = left * l1 + bottom * b1 + c.x * b.y - b.x * c.y;
-	double crossY2 = left * l2 + bottom * b2 + a.x * c.y - c.x * a.y;
+	float l0 = b.y - a.y;
+	float l1 = c.y - b.y;
+	float l2 = a.y - c.y;
+	float b0 = a.x - b.x;
+	float b1 = b.x - c.x;
+	float b2 = c.x - a.x;
+	float crossY0 = left * l0 + bottom * b0 + b.x * a.y - a.x * b.y;
+	float crossY1 = left * l1 + bottom * b1 + c.x * b.y - b.x * c.y;
+	float crossY2 = left * l2 + bottom * b2 + a.x * c.y - c.x * a.y;
 
 	for (int y = bottom; y <= top; y++) {
-		double crossX0 = crossY0, crossX1 = crossY1, crossX2 = crossY2;
+		float crossX0 = crossY0, crossX1 = crossY1, crossX2 = crossY2;
 		for (int x = left; x <= right; x++) {
-			if (crossX0 >= 0 && crossX1 >= 0 && crossX2 >= 0) {
+			if (signbit(crossX0) == signbit(crossX1) && signbit(crossX1) == signbit(crossX2)) {
 				putpixel(x, y, color);
 			}
 			crossX0 += l0; crossX1 += l1; crossX2 += l2;
